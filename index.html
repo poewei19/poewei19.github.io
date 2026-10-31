@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>读书会简明版 · 书架</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<meta name="theme-color" content="#0F6B5E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="读书会书架">
+<meta name="description" content="用小学五年级就能看懂的话，讲好书里最有用的想法。每本书一个读书会，每周一章。">
+<style>
+/* Same look as the book apps. No web fonts or CDNs, so it opens fine in China and inside WeChat. */
+:root {
+  --bg: #F3F5F2;
+  --paper: #FFFFFF;
+  --ink: #1E2823;
+  --muted: #5B6A62;
+  --line: #DCE3DE;
+  --accent: #0F6B5E;
+  --accent-soft: #E0EFEB;
+  --font: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", system-ui, sans-serif;
+  --font-title: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121815; --paper: #1A221E; --ink: #E4ECE7; --muted: #9BADA3; --line: #2C3832;
+    --accent: #6CC7B4; --accent-soft: #1F3530;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.75 var(--font); }
+.wrap { max-width: 720px; margin: 0 auto; padding: calc(20px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom)); }
+h1 { font: 700 1.7rem/1.3 var(--font-title); margin: 8px 0 6px; }
+.lead { color: var(--muted); margin: 0 0 18px; }
+.start { background: var(--accent-soft); border-radius: 14px; padding: 14px 16px; margin-bottom: 24px; }
+.start b { color: var(--accent); }
+h2 { font-size: .95rem; color: var(--accent); letter-spacing: .05em; margin: 26px 0 10px; }
+.grid { display: grid; gap: 10px; }
+@media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+a.book { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 14px; align-items: center; text-decoration: none; color: inherit;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+a.book:active { transform: scale(.99); }
+a.book img { width: 56px; height: 56px; border-radius: 12px; display: block; }
+.name { font: 700 1.05rem/1.4 var(--font-title); }
+.what { color: var(--ink); font-size: .95rem; line-height: 1.55; }
+.meta { color: var(--muted); font-size: .8rem; }
+.how { margin-top: 30px; color: var(--muted); font-size: .9rem; }
+.how ol { padding-left: 1.3em; margin: 6px 0 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>读书会简明版 · 书架</h1>
+  <p class="lead">用小学五年级就能看懂的话，讲好书里最有用的想法。每本书配生活里的例子和每周一个小练习。不是原书翻译，免费，不用注册。</p>
+  <div class="start"><b>不知道从哪本开始？</b>先读《终身成长》或《掌控习惯》，每章5分钟，一周一章。</div>
+  <div id="shelf"></div>
+  <div class="how">
+    <b>怎么用</b>
+    <ol>
+      <li>点一本书就能开始读，读到哪里会自动记住。</li>
+      <li>看不懂的地方，按住文字选中，点“对这段提问”。</li>
+      <li>在浏览器菜单里选“添加到主屏幕”，下次像App一样打开。</li>
+    </ol>
+  </div>
+</div>
+<script>
+// One entry per published book app. To add a book: add a line here and push.
+const SHELF = [
+  { group: "先从这里开始", books: [
+    { slug: "mindset", name: "终身成长", what: "本事是练出来的，不是天生定死的。", n: "8章" },
+    { slug: "atomic-habits", name: "掌控习惯", what: "每天进步1%，用小习惯换来大变化。", n: "20章" },
+    { slug: "make-it-stick", name: "认知天性", what: "怎么学东西，才能记得牢、用得上。", n: "8章" },
+  ]},
+  { group: "工作和赚钱", books: [
+    { slug: "zero-to-one", name: "从0到1", what: "做别人没做过的事，找到自己的“秘密”。", n: "14章" },
+    { slug: "innovators-dilemma", name: "创新者的窘境", what: "小的、便宜的，为什么能打败大的。", n: "11章" },
+    { slug: "intelligent-investor", name: "聪明的投资者", what: "不亏大钱、不上当，慢慢变富。", n: "20章" },
+  ]},
+  { group: "家人和身体", books: [
+    { slug: "whole-brain-child", name: "全脑教养法", what: "孩子哭闹发脾气时，大人怎么帮他。", n: "12个方法" },
+    { slug: "molecular-biology-of-the-cell", name: "细胞的分子生物学", what: "身体里的细胞每天都在干什么。", n: "24章" },
+  ]},
+  { group: "学一门本事", books: [
+    { slug: "automate-the-boring-stuff", name: "Python编程快速上手", what: "让电脑替你干那些重复的活。", n: "20章" },
+  ]},
+];
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+document.getElementById("shelf").innerHTML = SHELF.map((g) => `<h2>${esc(g.group)}</h2><div class="grid">${g.books.map((b) =>
+  `<a class="book" href="/${b.slug}-bookclub/"><img src="/${b.slug}-bookclub/icon-192.png" alt="" loading="lazy">` +
+  `<div><div class="name">《${esc(b.name)}》</div><div class="what">${esc(b.what)}</div><div class="meta">${esc(b.n)} · 每周一章</div></div></a>`
+).join("")}</div>`).join("");
+</script>
+</body>
+</html>
